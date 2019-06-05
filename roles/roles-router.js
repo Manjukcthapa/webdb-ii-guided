@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const knex = require('knex');
-
+const Roles = require('./roles.model')
 
 
 const knexConfig = {
@@ -16,7 +16,7 @@ const db = knex(knexConfig);
 
 
 router.get('/', (req, res) => {
-  db('roles') 
+  Roles.find()
     .then(roles => {
       res.status(200).json(roles);
     })
@@ -27,9 +27,9 @@ router.get('/', (req, res) => {
 });
 
 router.get('/:id', (req, res) => {
-  db('roles')
-    .where({ id: req.params.id }) 
-    .first() 
+  Roles.findBYId(req.params.id)
+    // .where({ id: req.params.id }) 
+    // .first() 
     .then(role => {
       if (role) {
         res.status(200).json(role);
@@ -43,8 +43,10 @@ router.get('/:id', (req, res) => {
 });
 
 
+
+
 router.post('/', (req, res) => {
-  db('roles', 'id')
+  db('roles')
   .insert(req.body)
   .then(ids => {
    
@@ -62,8 +64,10 @@ router.post('/', (req, res) => {
   });
 });
 
+
+
 router.put('/:id', (req, res) => {
-  db('roles')
+  Roles.update(id, updates)
   .where({ id: req.params.id })
   .update(req.body)
   .then(count => {
@@ -86,9 +90,9 @@ router.put('/:id', (req, res) => {
 
 
 router.delete('/:id', (req, res) => {
-  db('roles')
-  .where({ id: req.params.id })
-  .del()
+  Roles.remove(req.params.id)
+  // .where({ id: req.params.id })
+  // .del()
   .then(count => {
     if (count > 0) {
       res.status(204).end(); 
